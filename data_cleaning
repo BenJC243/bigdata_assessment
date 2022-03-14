@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-data = pd.read_csv('/home/bc234/Documents/BigData/diabetic_data/diabetic_data.csv')# header=0)# delim_whitespace=True)
+data = pd.read_csv('/home/bc234/Documents/BigData/diabetic_data/diabetic_data.csv')
 df = pd.DataFrame(data)
     
     #DROP COLS W > 50% MISSING VALS
@@ -52,7 +52,6 @@ def numerical_list(df):
 def categorical_list(df):
     ls =[]
     for col in df.columns:
-            #if df[col].astype('category'):
         ls.append(col)
     ls.remove('encounter_id')
     ls.remove('patient_nbr')
@@ -68,7 +67,7 @@ def identify_outlier(df):
                     dist_from_mean = abs(x - mu)
                     dev = df[col].std()
                     y= 3*dev
-                    if (dist_from_mean > y): #if larger than 3 std dev.s away from mu, mark as outlier
+                    if (dist_from_mean > y): #if larger than 3 std devs away from mu, mark as outlier
                         temp[i] = 1
 
     df['outliers'] = temp
