@@ -27,7 +27,6 @@ def age_midpoint(df):
 df['age'] = age_midpoint(df)
 
     #REPLACE possible missing values in the columns diag_1, diag_2, and diag_3 by the number 0.
-
 df['diag_1'] = df['diag_1'].fillna(0,inplace=False)
 df['diag_2'] = df['diag_2'].fillna(0,inplace=False)
 df['diag_3'] = df['diag_3'].fillna(0,inplace=False)
@@ -65,10 +64,10 @@ def identify_outlier(df):
         if df[col].dtype == int or df[col].dtype == float: #and not (('encounter_id') or ('patient_nbr')):
             if df[col] is not df['encounter_id'] and (df[col] is not df['patient_nbr']):
                 for i, x in enumerate(df[col]):
-                    mu = df[col].mean()#float(np.mean(df[col]))#.mean()#()#.mean)#(axis=1)
+                    mu = df[col].mean()
                     dist_from_mean = abs(x - mu)
                     dev = df[col].std()
-                    y= 3*dev#y = 3 * float(np.std(df[col]))#dev #evaluate if outlier --> True = outlier
+                    y= 3*dev
                     if (dist_from_mean > y): #if larger than 3 std dev.s away from mu, mark as outlier
                         temp[i] = 1
 
