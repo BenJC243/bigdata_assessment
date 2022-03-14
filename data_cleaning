@@ -1,0 +1,95 @@
+import pandas as pd
+import numpy as np
+
+data = pd.read_csv('/home/bc234/Documents/BigData/diabetic_data/diabetic_data.csv')# header=0)# delim_whitespace=True)
+df = pd.DataFrame(data)
+    
+    #DROP COLS W > 50% MISSING VALS
+df = df.replace('?', np.nan) # replace ? with nan
+df = df.replace(r'^\s*$', np.nan, regex=True) # replace empty spaces with nans
+min50 = float(0.5*(df.shape[0] + 1))
+df = df.dropna(axis=1, thresh=min50)
+
+    #TRANSFORM AGE 
+def age_midpoint(df):
+    f = df['age'].str.split(pat='-')
+    ls = []
+    for i in f:
+        x = i[0][1]
+        d = str(x[0]) + str(5)
+        ls.append(d)
+    n = df.columns[5]
+    df.drop(n, axis = 1, inplace = True)
+    df[n] = ls
+    df['age'] = df[n]
+    return df['age']
+
+df['age'] = age_midpoint(df)
+
+    #REPLACE possible missing values in the columns diag_1, diag_2, and diag_3 by the number 0.
+
+df['diag_1'] = df['diag_1'].fillna(0,inplace=False)
+df['diag_2'] = df['diag_2'].fillna(0,inplace=False)
+df['diag_3'] = df['diag_3'].fillna(0,inplace=False)
+
+    #DROP ROWS WITH MISSING VALS
+df = df.dropna(how='any') #inplace=True
+
+for col in df.columns:
+    if df[col].dtype == object:
+        df[col] = df[col].astype('category')
+
+df['admission_type_id'] = df['admission_type_id'].astype('category')
+df['discharge_disposition_id'] = df['discharge_disposition_id'].astype('category')
+df['admission_source_id'] = df['admission_source_id'].astype('category')
+
+def numerical_list(df):
+    ls =[]
+    for col in df.columns:
+        if df[col].dtype == int or df[col].dtype == float:
+            ls.append(col)
+    return print(ls)
+
+def categorical_list(df):
+    ls =[]
+    for col in df.columns:
+            #if df[col].astype('category'):
+        ls.append(col)
+    ls.remove('encounter_id')
+    ls.remove('patient_nbr')
+    return print(ls)
+
+def identify_outlier(df):
+    temp = np.zeros(df.shape[0])
+    for col in df.columns:
+        if df[col].dtype == int or df[col].dtype == float: #and not (('encounter_id') or ('patient_nbr')):
+            if df[col] is not df['encounter_id'] and (df[col] is not df['patient_nbr']):
+                for i, x in enumerate(df[col]):
+                    mu = df[col].mean()#float(np.mean(df[col]))#.mean()#()#.mean)#(axis=1)
+                    dist_from_mean = abs(x - mu)
+                    dev = df[col].std()
+                    y= 3*dev#y = 3 * float(np.std(df[col]))#dev #evaluate if outlier --> True = outlier
+                    if (dist_from_mean > y): #if larger than 3 std dev.s away from mu, mark as outlier
+                        temp[i] = 1
+
+    df['outliers'] = temp
+    return df
+
+df = identify_outlier(df)
+
+# Removing outliers
+def removed_outliers(df, outliers=True):
+    if outliers:
+        df = identify_outlier(df)  # mark outliers
+        df = df[df['outliers'] == 0].copy() # filter for outliers
+        df.drop('outliers', axis = 1, inplace = True)
+    return df
+df = removed_outliers(df, outliers=True)
+
+#DROP 'patient_nbr' duplicates
+df = df.drop_duplicates(subset=['patient_nbr'])#, inplace = True)
+
+#print(numerical_list(df))
+#print(categorical_list(df))
+#df.dtypes
+df.shape
