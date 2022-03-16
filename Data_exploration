@@ -218,4 +218,4 @@ y = [5496/14332, 1223/3701, 51/157, 113/360]
 
 sns.barplot(x, y)
 print(plt.show())
-print(df['race_Hispanic'].value_counts())
+
