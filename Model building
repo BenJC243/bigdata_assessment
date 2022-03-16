@@ -17,6 +17,9 @@ df['readmitted'] = df['readmitted'].replace(
 df['readmitted'] = df['readmitted'].replace(
     to_replace=['>30'], 
     value='1')
+df['readmitted'] = df['readmitted'].replace(
+    to_replace=['<30'], 
+    value='1')
 
 #logisticregressionmodel
 clf = linear_model.LogisticRegression()
