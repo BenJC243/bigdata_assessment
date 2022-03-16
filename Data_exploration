@@ -219,3 +219,66 @@ y = [5496/14332, 1223/3701, 51/157, 113/360]
 sns.barplot(x, y)
 print(plt.show())
 
+  #ICD CODES GRAPH
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'circulatory_disease':
+        ls9.append(1)
+print(ls9.count(1), 'circulatory')
+
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'respiratory_disease':
+        ls9.append(1)
+print(ls9.count(1), 'respiratory')
+
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'gastrointestinal_disease':
+        ls9.append(1)
+print(ls9.count(1), 'gastrointestinal_disease')
+
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'genitourinary':
+        ls9.append(1)
+print(ls9.count(1), 'genitourinary')
+
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'diabetes_mellitus':
+        ls9.append(1)
+print(ls9.count(1), 'diabetes_mellitus')
+
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'musculoskeletal/connective':
+        ls9.append(1)
+print(ls9.count(1), 'musculoskeletal/connective')
+
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'injury/poisoning':
+        ls9.append(1)
+print(ls9.count(1), 'injury/poisoning')
+        
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'neoplasms':
+        ls9.append(1)
+print(ls9.count(1), 'neoplasms')
+
+ls9=[]
+for i, j in zip(list(df['readmitted']), list(df['diag_1'])):
+    if i == '1' and j == 'other':
+        ls9.append(1)
+print(ls9.count(1), 'other')
+
+
+x = ['Circulatory disease', 'Respiratory disease', 'Gastrointestinal disease','Genitourinary disease','Diabetes',
+    'musculoskeletal/connective', 'injury/poisoning', 'neoplasms']
+y = [2268, 979, 557, 534, 591, 468, 475, 227, 899]
+sns.barplot(x, y)
+print(plt.show())
+
+#df['readmitted']
