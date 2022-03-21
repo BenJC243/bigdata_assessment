@@ -1,0 +1,93 @@
+df1 = df[['encounter_id','num_medications', 'number_outpatient', 'number_emergency', 'time_in_hospital', 
+'number_inpatient', 'age', 'num_lab_procedures', 'number_diagnoses', 
+'num_procedures','diag_1', 'readmitted']]
+
+  #DIABETIC PATIENTS ONLY
+df1 = df1.drop(df1.loc[df1['diag_1']!='diabetes_mellitus'].index)
+df1 = df1.drop(df1.loc[df1['diag_2']!='diabetes_mellitus'].index)
+df1 = df1.drop(df1.loc[df1['diag_3']!='diabetes_mellitus'].index)
+
+model1 = linear_model.LogisticRegression()
+cols = ['num_medications', 'number_outpatient', 'number_emergency', 'time_in_hospital', 
+'number_inpatient', 'age', 'num_lab_procedures', 'number_diagnoses', 'num_procedures', 'encounter_id']
+
+X = df1[cols]
+Y = df1['readmitted']
+model1.fit(X, Y)
+print('Model score:\n ', model1.score(X,Y))
+print('Coefficients: ')
+for feat, coef in zip(cols, model1.coef_[0]):
+    print(feat, coef)
+
+
+  #TRAINING AND TEST SET
+X_train, X_test, Y_train, Y_test = train_test_split(
+X, Y, test_size=0.25)
+model2 = linear_model.LogisticRegression()
+model2.fit(X_train, Y_train)
+print("Score against training data: {}".format(model2.score(X_train, Y_train)))
+print("Score against test data: {}".format(model2.score(X_test, Y_test)))
+#scores = cross_val_score(linear_model.LogisticRegression(), X, Y, scoring='accuracy', cv=10)
+#print("Cross validation mean scores: {}".format(scores.mean()))
+
+
+    #CONFUSION MATRIX
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, RocCurveDisplay, ConfusionMatrixDisplay
+
+df1['readmitted'] = df1['readmitted'].replace({1:'1', 1:'1', 0: '0'})
+#df1['readmitted'] = df1['readmitted'].replace({'1':1, '0':0})
+
+#print(df1)
+#print(df['readmitted'])#.dtype)
+pred_test = model2.predict(X_test)
+pred_train = model2.predict(X_train)
+
+## Acuracy score for the training data
+accuracy_train = accuracy_score(pred_train, Y_train)
+print('Accuracy for the training set: ', accuracy_train)
+## Acuracy score for the test data
+accuracy_test = accuracy_score(pred_test, Y_test)
+print('Accuracy for the test set:', accuracy_test)
+
+# confusion matrix for the test data
+pred = pred_test
+cm = confusion_matrix(Y_test, pred)
+
+TN, FP, FN, TP = confusion_matrix(Y_test, pred_test).ravel()
+
+print('True Positive: ', TP)
+print('False Positive: ', FP)
+print('True Negative: ', TN)
+print('False Negative(FN) = ', FN)
+
+accuracy = (TP+TN) /(TP+FP+TN+FN)
+
+print('Accuracy of the binary classification = ', accuracy)
+print(cm)
+
+disp = ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=model2.classes_)
+disp.plot()
+plt.show()
+
+# Calculate Accuracy, Precision and Recall Metrics for the test data
+accuracy = accuracy_score(pred, Y_test)
+print('Accuracy  =  ', accuracy)
+precision = precision_score(pred, Y_test,pos_label = '1')
+print('Precision  =  ', precision)
+recall = recall_score(pred, Y_test,pos_label = '1')
+print('Recall  = ', recall)
+f1score = f1_score(pred, Y_test,pos_label = '1')
+
+print('F1_score  = ', f1score)
+plt.show()
+
+    #CROSS VALIDATION
+scores = cross_val_score(linear_model.LogisticRegression(), X, Y, scoring='accuracy')
+print('Cross validation mean score: ', scores.mean())
+
+        
+        
+        #IMPROVED MODEL
+#REMOVE encounter id --> increases score slightly
+
