@@ -25,15 +25,15 @@ X_train, X_test, Y_train, Y_test = train_test_split(
 X, Y, test_size=0.25)
 model2 = linear_model.LogisticRegression()
 model2.fit(X_train, Y_train)
-print("Score against training data: {}".format(model2.score(X_train, Y_train)))
-print("Score against test data: {}".format(model2.score(X_test, Y_test)))
+print("Score against training data: ", model2.score(X_train, Y_train))
+print("Score against test data: ", model2.score(X_test, Y_test))
 #scores = cross_val_score(linear_model.LogisticRegression(), X, Y, scoring='accuracy', cv=10)
-#print("Cross validation mean scores: {}".format(scores.mean()))
+#print("Cross validation mean scores: ", scores.mean())
 
 
     #CONFUSION MATRIX
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, RocCurveDisplay, ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, ConfusionMatrixDisplay
 
 df1['readmitted'] = df1['readmitted'].replace({1:'1', 1:'1', 0: '0'})
 #df1['readmitted'] = df1['readmitted'].replace({'1':1, '0':0})
@@ -56,14 +56,14 @@ cm = confusion_matrix(Y_test, pred)
 
 TN, FP, FN, TP = confusion_matrix(Y_test, pred_test).ravel()
 
-print('True Positive: ', TP)
-print('False Positive: ', FP)
-print('True Negative: ', TN)
-print('False Negative(FN) = ', FN)
+print('True Positives: ', TP)
+print('False Positives: ', FP)
+print('True Negatives: ', TN)
+print('False Negatives: ', FN)
 
 accuracy = (TP+TN) /(TP+FP+TN+FN)
 
-print('Accuracy of the binary classification = ', accuracy)
+print('Accuracy score: ', accuracy)
 print(cm)
 
 disp = ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=model2.classes_)
